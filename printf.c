@@ -858,6 +858,11 @@ static int _vsnprintf(out_fct_type out, char* buffer, const size_t maxlen, const
 
 
 ///////////////////////////////////////////////////////////////////////////////
+#include "iris_ulog.h"
+void _putchar(char character)
+{
+  ULOG_INFO("%c", character);
+}
 
 int printf_(const char* format, ...)
 {
