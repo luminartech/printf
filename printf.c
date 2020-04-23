@@ -124,6 +124,24 @@ typedef struct
 	void *arg;
 } out_fct_wrap_type;
 
+// doesn't have to be a separate method
+static inline bool double_are_equal(double a, double b)
+{
+
+// temporarily suppress "comparing float with == is unsafe"
+// (we really want to check exactly against 0.5)
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
+
+	return a == b;
+
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
+}
+
 // internal buffer output
 static inline void _out_buffer(char character, void *buffer, size_t idx, size_t maxlen)
 {
@@ -369,7 +387,7 @@ static size_t _ftoa(out_fct_type out, char *buffer, size_t idx, size_t maxlen, d
 	static const double pow10[] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
 
 	// test for special values
-	if (value != value)
+	if (false == double_are_equal(value, value))
 		return _out_rev(out, buffer, idx, maxlen, "nan", 3, width, flags);
 	if (value < -DBL_MAX)
 		return _out_rev(out, buffer, idx, maxlen, "fni-", 4, width, flags);
@@ -516,7 +534,7 @@ static size_t _etoa(out_fct_type out, char *buffer, size_t idx, size_t maxlen, d
                     unsigned int width, unsigned int flags)
 {
 	// check for NaN and special values
-	if ((value != value) || (value > DBL_MAX) || (value < -DBL_MAX))
+	if ((false == double_are_equal(value, value)) || (value > DBL_MAX) || (value < -DBL_MAX))
 	{
 		return _ftoa(out, buffer, idx, maxlen, value, prec, width, flags);
 	}
@@ -1008,7 +1026,7 @@ static int _vsnprintf(out_fct_type out, char *buffer, const size_t maxlen, const
 #include "iris_ulog.h"
 void _putchar(char character) { ULOG_INFO("%c", character); }
 #else // SAMs (system & laser)
-#include "definitions"
+#include "uart/plib_uart0.h"
 void _putchar(char character) { UART0_WriteByte(character); }
 #endif
 
