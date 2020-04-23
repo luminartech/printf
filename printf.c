@@ -1004,8 +1004,13 @@ static int _vsnprintf(out_fct_type out, char *buffer, const size_t maxlen, const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+#ifdef HYDRA
 #include "iris_ulog.h"
 void _putchar(char character) { ULOG_INFO("%c", character); }
+#else // SAMs (system & laser)
+#include "definitions"
+void _putchar(char character) { UART0_WriteByte(character); }
+#endif
 
 int printf_(const char *format, ...)
 {
