@@ -32,7 +32,9 @@
 #ifndef _PRINTF_H_
 #define _PRINTF_H_
 
+#ifndef __ARM
 #define __ARM
+#endif
 #include <stdarg.h>
 #include <stddef.h>
 
