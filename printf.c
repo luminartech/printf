@@ -1026,8 +1026,10 @@ static int _vsnprintf(out_fct_type out, char *buffer, const size_t maxlen, const
 #include "iris_ulog.h"
 void _putchar(char character) { ULOG_INFO("%c", character); }
 #else // SAMs (system & laser)
-#include "uart/plib_uart3.h"
-void _putchar(char character) { UART3_WriteByte(character); }
+//#include "uart/plib_uart3.h"
+//void _putchar(char character) { UART3_WriteByte(character); }
+#include "uart_buffer.h"
+void _putchar(char character) { uart_buffered_write_char(character); }
 #endif
 
 int printf_(const char *format, ...)
